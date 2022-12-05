@@ -1,12 +1,43 @@
-CREATE TABLE users (
-  id int(11) AUTO_INCREMENT PRIMARY KEY not null,
-  username text not null,
-  password text not null
-);
-INSERT INTO users (id, username, password)
+CREATE TABLE `customers` (
+  `pesel` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(10) not null,
+  `password` varchar(20) not null,
+  PRIMARY KEY (`pesel`) USING BTREE,
+  UNIQUE KEY `uni_username` (`username`),
+  UNIQUE KEY `uni_password` (`password`) USING BTREE
+)ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+INSERT INTO `customers` (`pesel`, `username`, `password`)
 VALUES 
-(1, 'admin', 'admin123'),
-(2, 'user', '123');
+('12345', 'admin', 'admin123'),
+('123455', 'user', '123');
+
+
+CREATE TABLE `orders`(
+  `order_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `price` decimal(6,2) NOT NULL,
+  `pesel` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`order_id`) USING BTREE,
+  KEY `transaction_pesel` (`pesel`),
+ CONSTRAINT `transaction_pesel` FOREIGN KEY (`pesel`) 
+ REFERENCES `customers` (`pesel`) ON DELETE CASCADE ON UPDATE CASCADE
+)ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+INSERT INTO `orders` (`order_id`, `price`, `pesel`)
+VALUES 
+(1, '40.00', '123455'),
+(2, '123', '123455');
+
+CREATE TABLE `order_items` (
+  `order_id` int(10) UNSIGNED NOT NULL,
+  `book_isbn` varchar(20) COLLATE latin1_general_ci NOT NULL,
+  `item_price` decimal(6,2) NOT NULL,
+  `quantity` tinyint(3) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+INSERT INTO `order_items` (`order_id`, `book_isbn`, `item_price`, `quantity`) VALUES
+(1, '978-1-118-94924-5', '20.00', 1),
+(1, '978-1-44937-019-0', '20.00', 1);
 
 CREATE TABLE `books` (
   `book_isbn` varchar(20) COLLATE latin1_general_ci NOT NULL,
