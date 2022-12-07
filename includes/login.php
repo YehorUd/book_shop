@@ -14,13 +14,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     // If result matched $myusername and $mypassword, table row must be 1 row
 
     if($resultCheck == 1) {
-      if("$myusername" != "admin"){
       $_SESSION['login_user'] = "$myusername";
       header("Location: index.php");
-    }else{
-      header("Location: admin.php");
-    }
-      
     }else{
         $error = "Your Username or Password is invalid";
     }
