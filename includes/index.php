@@ -8,7 +8,6 @@ session_start();
 <head>
 	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <style>
   #center {    
@@ -61,6 +60,9 @@ session_start();
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
+}
+table, th, td {
+  border: 1px solid;
 }
 .dropdown-content a {
     float: none;
@@ -151,13 +153,6 @@ session_start();
         <?php } ?>        
 </div>
 <a href="#koszyk">My Cart</a>
-<div class = search-container>
-    <form action="/action_page.php">
-    <input type="text" name="search" placeholder="Search..">
-    <button type="submit"><i class="fa fa-search"></i></button>
-</form>
-  </div>
-  
 </ul>
     </nav>
   </div>
@@ -166,7 +161,14 @@ session_start();
 </div>
 <div style ="margin: 50px;">
 <h1>List of Books</h1>
+<form action="" method="GET">
+<div align="center" class = "input-group mb-3">
+    <input type="text" name="search" class="form-control" value="<?php if(isset($_GET['search'])){echo $_GET['search'];}?>" placeholder="Search..">
+    <button type="submit"><i class="fa fa-search"></i></button>
+</form>
+  </div>
 <br>
+
 <table class="table">
   <thead>
     <tr>
@@ -180,29 +182,42 @@ session_start();
   </thead>
   <tbody>
     <?php
-    //read all row from DB table
-    $sql = "SELECT * FROM books";
-    $result = $db->query($sql);
-
-    if(!$result){
-      die("Invalid query: " .$db->error);
-    }
-
-    //read data of each row
-    while($row = $result->fetch_assoc()): ?>
-      <tr>
-        <td><?php echo $row['book_isbn']; ?></td>
-        <td><?php echo $row['book_title']; ?></td>
-        <td> <?php echo $row['book_author']; ?></td>
-        <td><?php echo $row['book_categories']; ?></td>
-        <td><?php echo $row['book_price']; ?></td>
+    if(isset($_GET['search'])){
+    $filtervalues = $_GET['search'];
+    $query = "SELECT * FROM books WHERE CONCAT(book_isbn, book_title, book_author, book_categories) LIKE '%$filtervalues%' ";
+    $query_run = mysqli_query($db, $query);
+    
+    if(mysqli_num_rows($query_run) > 0)
+    {
+      foreach($query_run as $items){
+        ?>
+        <tr>
+        <td><?= $items['book_isbn']; ?></td>
+        <td><?= $items['book_title']; ?></td>
+        <td><?= $items['book_author']; ?></td>
+        <td><?= $items['book_categories']; ?></td>
+        <td><?= $items['book_price']; ?></td>
         <td>
-          <a class='btn btn-primary btn-sm' href= 'add'> Add to Cart</a>
+          <a href= 'add'> Add to Cart</a>
         </td>
-      </tr>
-      <?php endwhile; ?>
+        </tr>
+        <?php
+      }
+    }
+    else
+    {
+?>
+<tr>
+  <td colspan="4">No Record Found</td>
+</tr>
+<?php
+    }
+    }
+    ?>
+  
   </tbody>
 </table>
+</div>
 </div>
 	</body>
 </html>
