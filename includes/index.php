@@ -2,6 +2,10 @@
 include ('config.php');
 session_start();
 
+$bookisbn = mysqli_real_escape_string($db,$_POST['book_isbn']);
+if(isset($_POST['add'])){
+print_r($_POST['book_isbn']);
+}
 ?>
 <!doctype html>
 <html>
@@ -122,6 +126,11 @@ table, th, td {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+#cart_count{
+  text-align: center;
+  padding: 0 0.9rem 0.1rem 0.9rem;
+  border-radius: 3rem;
+}
   </style>
 <body>
 <div class=header>
@@ -152,7 +161,16 @@ table, th, td {
         </div>
         <?php } ?>        
 </div>
-<a href="#koszyk">My Cart</a>
+<a href="cart.php">My Cart
+  <?php
+  if(isset($_SESSION['cart'])){
+    $count = count($_SESSION['cart']);
+    echo "<span class=\"text-warning bg-light\" id=\"cart_count\">$count</span>";
+  }else{
+    echo "<span class=\"text-warning bg-light\" id=\"cart_count\">0</span>";
+  }
+  ?>
+</a>
 </ul>
     </nav>
   </div>
@@ -192,14 +210,17 @@ table, th, td {
       foreach($query_run as $items){
         ?>
         <tr>
+        <form action="index.php" method="post">
         <td><?= $items['book_isbn']; ?></td>
         <td><?= $items['book_title']; ?></td>
         <td><?= $items['book_author']; ?></td>
         <td><?= $items['book_categories']; ?></td>
         <td><?= $items['book_price']; ?></td>
         <td>
-          <a href= 'add'> Add to Cart</a>
+          <button type="submit" name="add">Add to Cart </button>
+          <input type="hidden" name="book_isbn" value='$bookisbn'>
         </td>
+        </form>
         </tr>
         <?php
       }
@@ -221,13 +242,3 @@ table, th, td {
 </div>
 	</body>
 </html>
-
-<?php
-
-if(isset($_POST["submit"]))
-{
-  $str = $_POST["search"];
-  $sth = $db->prepare("SELECT * FROM 'books' WHERE book_title = '$str'");
-
-}
-?>

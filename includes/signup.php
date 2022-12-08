@@ -4,13 +4,15 @@ include ("header.php");
 session_start();
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
+$npesel = $_POST['npesel'];
 $uname = $_POST['uname'];
 $pwd = $_POST['pwd'];
 
-$query = "INSERT INTO users (username, password)
-VALUES ('$uname', '$pwd');";
+
+$query = "INSERT INTO customers (pesel, username, password)
+VALUES ('$npesel', '$uname', '$pwd');";
 mysqli_query($db,$query);
-header("Location: index.php");
+header("Location: login.php");
 }
 ?>
 <html>
@@ -141,9 +143,9 @@ input[type="submit"]:hover{
           <label>Please enter a password</label>
         </div>
         <div class="txt_field">
-          <input type="cpassword" required name="pwd">
+          <input type="number" required name="npesel">
           <span></span>
-          <label>Confirm password</label>
+          <label>Please enter PESEL number</label>
         </div>
         <input type="submit" value="Sign UP">
         <div class="signup_link">

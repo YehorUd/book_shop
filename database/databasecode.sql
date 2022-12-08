@@ -9,9 +9,16 @@ CREATE TABLE `customers` (
 
 INSERT INTO `customers` (`pesel`, `username`, `password`)
 VALUES 
-('12345', 'admin', 'admin123'),
-('123455', 'user', '123');
-
+('1234567890', 'admin', 'admin123'),
+('4214804218', 'user', '123'),
+('1328154189', 'Hero', 'jadij2003'),
+('9382739482', 'Jadik', 'bryalem1983'),
+('2332183394', 'Bafjghe14', 'robotxx'),
+('1328154189', 'Hero', 'jadij2003'),
+('3213957705', 'Bulka23', 'Harijsto2000'),
+('5120853957', '2marvin2', 'hiruxoja41'),
+('5825785296', 'Holder772', 'pokemongovpl'),
+('7948205099', 'NumberOne', 'shabudabi1982');
 
 CREATE TABLE `orders`(
   `order_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -49,9 +56,14 @@ CREATE TABLE `books` (
 
 INSERT INTO `books` (`book_isbn`, `book_title`, `book_author`, `book_categories`, `book_price`) 
 
-VALUES ('64568', 'Sample 102', 'Sample Author 2', 'Test - updated', '1200.00'),
+VALUES 
+('64568', 'Sample 102', 'Sample Author 2', 'Test - updated', '1200.00'),
 ('978-0-321-94786-4', 'Learning Mobile App Development', 'Jakob Iversen, Michael Eierman', 'Programming', '20.00'),
 ('978-0-7303-1484-4', 'Doing Good By Doing Good', 'Peter Baines', 'Programming', '20.00'),
 ('978-1-118-94924-5', 'Programmable Logic Controllers', 'Dag H. Hanssen', 'Programming', '20.00'),
 ('978-1-1180-2669-4', 'Professional JavaScript for Web Developers, 3rd Edition', 'Nicholas C. Zakas', 'Programming', '20.00'),
-('978-1-44937-019-0', 'Learning Web App Development', 'Semmy Purewal', 'Programming', '20.00');
+('978-1-44937-019-0', 'Learning Web App Development', 'Semmy Purewal', 'Programming', '20.00'),
+('978-0-329-94859-4', 'Among the Thugs', 'Bill Buford', 'Sport', '199.00'),
+('978-0-329-94859-4', 'The Game', 'Ken Dryden', 'Sport', '24.00'),
+('978-0-329-94859-4', 'The Natural', 'Bernard Malamud', 'Sport', '26.00'),
+('978-0-329-94859-4', 'Friday Night Lights: A Town, a Team, and a Dream', 'Buzz Bissinger', 'Sport', '89.00');

@@ -144,13 +144,6 @@ include ('config.php');
         <?php } ?>        
 </div>
 <a href="#koszyk">My Cart</a>
-<div class = search-container>
-    <form action="/action_page.php">
-    <input type="text" placeholder="Search..">
-    <button type="submit"><i class="fa fa-search"></i></button>
-</form>
-  </div>
-  
 </ul>
     </nav>
   </div>
