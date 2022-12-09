@@ -1,10 +1,6 @@
 <?php
-include ('config.php');
+include ("config.php");
 session_start();
-if(!isset($_SESSION['cart'])){
-  $_SESSION['cart'] = array();
-}
-unset($_SESSION['qty_array']);
 ?>
 <!doctype html>
 <html>
@@ -180,84 +176,82 @@ table, th, td {
     </nav>
 </div>
   </div>
-<div id ="center">  
-  <img src="images/logo.jpg" width ="400" height="400">
-</div>
-<div style ="margin: 50px;">
-<h1>List of Books</h1>
-<form action="" method="GET">
-<div align="center" class = "input-group mb-3">
-    <input type="text" name="search" class="form-control" value="<?php if(isset($_GET['search'])){echo $_GET['search'];}?>" placeholder="Search..">
-    <button type="submit"><i class="fa fa-search"></i></button>
-</form>
-  </div>
-<br>
+	<h1 class="page-header text-center">Cart Details</h1>
+	<div class="row">
+		<div class="col-sm-8 col-sm-offset-2">
+			<?php 
+			if(isset($_SESSION['message'])){
+				?>
+				<div class="alert alert-info text-center">
+					<?php echo $_SESSION['message']; ?>
+				</div>
+				<?php
+				unset($_SESSION['message']);
+			}
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>ISBN</th>
-      <th>Title</th>
-      <th>Author</th>
-      <th>Categories</th>
-      <th>Prise</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php
-      //info message
-      if(isset($_SESSION['message'])){
-        ?>
-        <div class="row">
-          <div class="col-sm-6 col-sm-offset-6">
-            <div class="alert alert-info text-center">
-              <?php echo $_SESSION['message']; ?>
-            </div>
-          </div>
-        </div>
-        <?php
-        unset($_SESSION['message']);
-      }
-    if(isset($_GET['search'])){
-    $filtervalues = $_GET['search'];
-    $query = "SELECT * FROM books WHERE CONCAT(book_isbn, book_title, book_author, book_categories) LIKE '%$filtervalues%' ";
-    $query_run = mysqli_query($db, $query);
-    
-    if(mysqli_num_rows($query_run) > 0)
-    {
-      foreach($query_run as $items){
+			?>
+			<form method="POST" action="save_cart.php">
+			<table class="table table-bordered table-striped">
+				<thead>
+					<th></th>
+					<th>Name</th>
+					<th>Price</th>
+					<th>Quantity</th>
+					<th>Subtotal</th>
+				</thead>
+				<tbody>
+					<?php
+						//initialize total
+						$total = 0;
+						if(!empty($_SESSION['cart'])){
+						//connection
+						//create array of initail qty which is 1
+ 						$index = 0;
+ 						if(!isset($_SESSION['qty_array'])){
+ 							$_SESSION['qty_array'] = array_fill(0, count($_SESSION['cart']), 1);
+ 						}
+            $in = "'".implode(',',$_SESSION['cart'])."'";
+            $sql = "SELECT * FROM `books` WHERE `book_isbn` IN ($in)";
+            $query = $db->query($sql);
+      while($row = $query->fetch_assoc()){
         ?>
         <tr>
-        <form action="index.php" method="post">
-        <td><?= $items['book_isbn']; ?></td>
-        <td><?= $items['book_title']; ?></td>
-        <td><?= $items['book_author']; ?></td>
-        <td><?= $items['book_categories']; ?></td>
-        <td><?= $items['book_price']; ?></td>
-        <td>
-        <div class="row product_footer">
-							<span class="pull-right"><a href="add_cart.php?book_isbn=<?php echo $items['book_isbn']; ?>" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>Cart</a></span>
-						</div>
-        </td>
-        </form>
+          <td>
+            <a href="delete_item.php?book_isbn=<?php echo $row['book_isbn']; ?>&index=<?php echo $index; ?>" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></a>
+          </td>
+          <td><?php echo $row['book_title']; ?></td>
+          <td><?php echo number_format($row['book_price'], 2); ?></td>
+          <input type="hidden" name="indexes[]" value="<?php echo $index; ?>">
+          <td><input type="text" class="form-control" value="<?php echo $_SESSION['qty_array'][$index]; ?>" name="qty_<?php echo $index; ?>"></td>
+          <td><?php echo number_format($_SESSION['qty_array'][$index]*$row['book_price'], 2); ?></td>
+          <?php $total += $_SESSION['qty_array'][$index]*$row['book_price']; ?>
         </tr>
         <?php
-      }
-    }
-    else
-    {
-?>
-<tr>
-  <td colspan="4">No Record Found</td>
-</tr>
-<?php
-    }
-    }
-    ?>
-  </tbody>
-</table>
-</div>
+        $index ++;
+							}
+						}
+          
+						else{
+							?>
+							<tr>
+								<td colspan="4" class="text-center">No Item in Cart</td>
+							</tr>
+							<?php
+						}
+					?>
+					<tr>
+						<td colspan="4" align="right"><b>Total</b></td>
+						<td><b><?php echo number_format($total, 2); ?></b></td>
+					</tr>
+				</tbody>
+			</table>
+			<a href="index.php" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Back</a>
+			<button type="submit" class="btn btn-success" name="save">Save Changes</button>
+			<a href="clear_cart.php" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Clear Cart</a>
+			<a href="checkout.php" class="btn btn-success"><span class="glyphicon glyphicon-check"></span> Checkout</a>
+			</form>
+		</div>
+	</div>
 </div>
 	</body>
 </html>

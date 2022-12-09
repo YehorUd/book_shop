@@ -113,6 +113,15 @@ include ('config.php');
 .dropdown:hover .dropdown-content {
     display: block;
 }
+.cartcss{
+  vertical-align: 12px;
+}
+
+#cart_count{
+  text-align: center;
+  padding: 0 0.9rem 0.1rem 0.9rem;
+  border-radius: 3rem;
+}
   </style>
 </head>
 <body>
@@ -143,7 +152,10 @@ include ('config.php');
         </div>
         <?php } ?>        
 </div>
-<a href="#koszyk">My Cart</a>
+<div>
+<img src="images/cart.png" width ="40" height="40" ></img>
+<a class="cartcss" href="login.php">My Cart</a>
+</div>
 </ul>
     </nav>
   </div>
