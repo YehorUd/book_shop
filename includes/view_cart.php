@@ -210,27 +210,28 @@ table, th, td {
  						if(!isset($_SESSION['qty_array'])){
  							$_SESSION['qty_array'] = array_fill(0, count($_SESSION['cart']), 1);
  						}
-            $in = "'".implode(',',$_SESSION['cart'])."'";
-            $sql = "SELECT * FROM `books` WHERE `book_isbn` IN ($in)";
+            $sql = "SELECT * FROM `books` WHERE `book_isbn` IN (".implode(',',$_SESSION['cart']).")";
             $query = $db->query($sql);
       while($row = $query->fetch_assoc()){
         ?>
         <tr>
-          <td>
-            <a href="delete_item.php?book_isbn=<?php echo $row['book_isbn']; ?>&index=<?php echo $index; ?>" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></a>
-          </td>
+          <form>
           <td><?php echo $row['book_title']; ?></td>
           <td><?php echo number_format($row['book_price'], 2); ?></td>
           <input type="hidden" name="indexes[]" value="<?php echo $index; ?>">
           <td><input type="text" class="form-control" value="<?php echo $_SESSION['qty_array'][$index]; ?>" name="qty_<?php echo $index; ?>"></td>
           <td><?php echo number_format($_SESSION['qty_array'][$index]*$row['book_price'], 2); ?></td>
-          <?php $total += $_SESSION['qty_array'][$index]*$row['book_price']; ?>
+          </form>
+          <?php $total += $_SESSION['qty_array'][$index]*$row['book_price']; 
+          $_SESSION['grand_total'] = $total;
+          $_SESSION['index'] = $_SESSION['qty_array'][$index];
+          ?>
         </tr>
         <?php
         $index ++;
 							}
+              $_SESSION['quantity'] = $query->fetch_assoc();
 						}
-          
 						else{
 							?>
 							<tr>
@@ -248,7 +249,7 @@ table, th, td {
 			<a href="index.php" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> Back</a>
 			<button type="submit" class="btn btn-success" name="save">Save Changes</button>
 			<a href="clear_cart.php" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Clear Cart</a>
-			<a href="checkout.php" class="btn btn-success"><span class="glyphicon glyphicon-check"></span> Checkout</a>
+			<a href="purchase.php" class="btn btn-success" name="placeOrder"><span class="glyphicon glyphicon-check"></span> Purchase</a>
 			</form>
 		</div>
 	</div>

@@ -237,7 +237,7 @@ table, th, td {
         <td><?= $items['book_price']; ?></td>
         <td>
         <div class="row product_footer">
-							<span class="pull-right"><a href="add_cart.php?book_isbn=<?php echo $items['book_isbn']; ?>" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>Cart</a></span>
+							<span class="pull-right"><a href="add_cart.php?book_isbn=<?php echo $items['book_isbn']; ?>" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>Buy</a></span>
 						</div>
         </td>
         </form>

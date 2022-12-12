@@ -10,5 +10,5 @@
 	{
 		$_SESSION['message'] = 'Product already in cart';
 	}
-	header('location: index.php');
+	header('location: view_cart.php');
 ?>
